@@ -1,5 +1,7 @@
+from django.http import Http404
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.db import connection
 
 from .models import Question
 
@@ -10,7 +12,9 @@ def index(request):
     })
 
 def detail(request, question_id):
-    return HttpResponse("Question #{}".format(question_id))
+    question = get_object_or_404(Question, id=question_id)
+    key = "question"
+    return render(request, "polls/detail.html", {key: question})
 
 def results(request, question_id):
     response = "Result of question #%s"
